@@ -113,90 +113,9 @@ Le projet de développement de l'application de gestion des dossiers de recouvre
 
 ## 🗄️ Modélisation de la Base de Données
 
-### Entités Principales
+### Diagramme ERD - Code pour app.eraser.com
 
-#### 1. DossierRecouvrement (Entité Centrale)
-```sql
-CREATE TABLE dossier_recouvrement (
-    id BIGSERIAL PRIMARY KEY,
-    account_number VARCHAR(255) NOT NULL,
-    engagement_total DOUBLE PRECISION,
-    montant_principal DOUBLE PRECISION,
-    interet_contractuel DOUBLE PRECISION,
-    interet_retard DOUBLE PRECISION,
-    nature TEXT,
-    agence_ouverture_compte VARCHAR(255),
-    references_checks VARCHAR(255),
-    references_credits VARCHAR(255),
-    references_cautions VARCHAR(255),
-    references_lc VARCHAR(255),
-    provision DOUBLE PRECISION,
-    interets_reserves DOUBLE PRECISION,
-    status VARCHAR(50) DEFAULT 'EN_COURS',
-    etat_validation VARCHAR(50) DEFAULT 'INITIALE',
-    garanties_valeur VARCHAR(255),
-    credits_file VARCHAR(255),
-    cautions_file VARCHAR(255),
-    lc_file VARCHAR(255),
-    cheque_file VARCHAR(255),
-    compte_id BIGINT,
-    date_creation TIMESTAMP,
-    date_archivage TIMESTAMP,
-    FOREIGN KEY (compte_id) REFERENCES comptes(id)
-);
-```
-
-#### 2. User (Gestion des Utilisateurs)
-```sql
-CREATE TABLE users (
-    id BIGSERIAL PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    first_name VARCHAR(255),
-    last_name VARCHAR(255),
-    user_type VARCHAR(50),
-    first_login BOOLEAN DEFAULT TRUE,
-    role_id BIGINT,
-    agence_id BIGINT,
-    FOREIGN KEY (role_id) REFERENCES roles(id),
-    FOREIGN KEY (agence_id) REFERENCES agences(id)
-);
-```
-
-#### 3. Role & Permission (Système d'Autorisation)
-```sql
-CREATE TABLE roles (
-    id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL,
-    active BOOLEAN DEFAULT TRUE
-);
-
-CREATE TABLE permissions (
-    id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL,
-    description TEXT
-);
-
-CREATE TABLE role_permissions (
-    role_id BIGINT,
-    permission_id BIGINT,
-    PRIMARY KEY (role_id, permission_id),
-    FOREIGN KEY (role_id) REFERENCES roles(id),
-    FOREIGN KEY (permission_id) REFERENCES permissions(id)
-);
-```
-
-### Diagramme ERD (Relations)
-```
-Users ──┐
-         ├─► DossierRecouvrement ──┬─► ChequeFiles
-         │                        ├─► CautionFiles  
-Roles ───┤                        ├─► CreditFiles
-         │                        ├─► LcFiles
-Agences ─┘                        ├─► Garanties
-                                  ├─► Comments
-Clients ────► Comptes ────────────┘  └─► Notifications
-```
+![Diagramme ERD des entités](diagram-export-29-07-2025-19_57_22.png)
 
 ### Statuts et Énumérations
 
