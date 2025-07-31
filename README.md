@@ -656,9 +656,7 @@ Ces fichiers peuvent être importés dans l'application pour tester les fonction
 
 ### Contacts Équipe
 - **Développeur Principal** : Mohamedou Bouk - 23083@esp.mr
-- **Développeur** : Mariem Ejiwene - 23018@esp.mr
-- **Développeur** : Babah  - 23064@esp.mr
-- **Développeur** : selma - 23042@esp.mr
+
 
 
 
