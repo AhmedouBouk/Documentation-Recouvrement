@@ -660,12 +660,8 @@ Ces fichiers peuvent être importés dans l'application pour tester les fonction
 - **Développeur** : Babah  - 23064@esp.mr
 - **Développeur** : selma - 23042@esp.mr
 
-### Versions et Changelog
-- **v1.0.0** : Version initiale avec fonctionnalités de base
-- **v1.1.0** : Ajout gestion multi-fichiers
-- **v1.2.0** : Workflow de validation amélioré
+
 
 ---
 
-**Dernière mise à jour** : 29 Juillet 2025
-**Version de la documentation** : 1.0.0
+**Dernière mise à jour** : 31 Juillet 2025
