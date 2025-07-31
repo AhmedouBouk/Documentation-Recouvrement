@@ -459,6 +459,43 @@ ng serve
 # Application disponible sur http://localhost:4200
 ```
 
+### Exécution avec Docker
+
+#### 1. Créer un dossier de projet
+```bash
+mkdir project
+cd project
+```
+
+#### 2. Cloner le dépôt frontend (branche prod)
+```bash
+git clone -b prod https://github.com/AhmedouBouk/dossier_recouvrement_frontend.git
+```
+
+#### 3. Cloner le dépôt backend (branche prod)
+```bash
+git clone -b prod https://github.com/AhmedouBouk/dossiers-recouvrement-backend.git
+```
+
+#### 4. Naviguer vers le dossier backend
+```bash
+cd dossiers-recouvrement-backend
+```
+
+#### 5. Construire et démarrer l'application avec Docker
+```bash
+docker compose up --build
+```
+
+### 🌐 Accès à l'Application
+Une fois que tout est lancé, vous pouvez tester l'application en visitant :
+
+http://localhost
+
+### 🔐 Identifiants Admin par Défaut
+
+- Nom d'utilisateur : admin@bnm.mr
+- Mot de passe : 123456
 
 
 ---
