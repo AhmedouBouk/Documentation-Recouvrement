@@ -48,6 +48,27 @@ Le projet de développement de l'application de gestion des dossiers de recouvre
 ```
 
 ### Pattern Architectural
+
+L'application suit une **architecture 3-tiers** avec une séparation claire entre :
+
+- **Couche de présentation** : Frontend Angular
+- **Couche métier** : Backend Spring Boot
+- **Couche de données** : PostgreSQL
+
+Le backend suit le modèle **MVC (Modèle-Vue-Contrôleur)**, tandis que le frontend Angular suit une **architecture orientée composants** qui s'apparente au modèle **MVVM (Model-View-ViewModel)** :
+
+#### Architecture MVVM dans le Frontend Angular
+
+- **Model** : Classes de modèles dans `src/app/shared/models`
+- **View** : Templates HTML et CSS dans les composants
+- **ViewModel** : Composants TypeScript et services qui font le lien entre la vue et le modèle
+
+#### Architecture MVC dans le Backend Spring Boot
+
+- **Modèle** : Entités JPA dans `com.bnm.recouvrement.entity`
+- **Vue** : Représentations JSON via ResponseEntity
+- **Contrôleur** : Classes contrôleurs REST dans `com.bnm.recouvrement.controller`
+
 - **Architecture 3-tiers** : Présentation (Angular) → Logique Métier (Spring Boot) → Données (PostgreSQL)
 - **Séparation des responsabilités** : Frontend/Backend découplés
 - **API REST** : Communication stateless avec authentification JWT
@@ -60,6 +81,35 @@ Le projet de développement de l'application de gestion des dossiers de recouvre
 - **Migrations** : Flyway pour la gestion des versions de schéma
 - **Connexion** : Pool de connexions configuré via Spring Boot
 
+#### Structure du Backend
+
+Le backend est organisé selon une structure claire et cohérente. Pour chaque fonctionnalité, on retrouve systématiquement :
+
+- **Controller** : `com.bnm.recouvrement.controller` - Point d'entrée des requêtes HTTP
+- **Service** : `com.bnm.recouvrement.service` - Logique métier
+- **Entity** : `com.bnm.recouvrement.entity` - Modèles de données
+- **Repository** : `com.bnm.recouvrement.dao` ou `com.bnm.recouvrement.repository` - Accès aux données
+
+#### Dossiers spéciaux
+
+- **Config/** : Configuration de l'application
+  - `SecurityConfig.java` : Configuration de Spring Security et JWT
+  - `CorsConfig.java` : Configuration CORS pour les requêtes cross-origin
+  - `JacksonConfig.java` : Configuration de la sérialisation JSON
+  - `JwtConfig.java` : Configuration des tokens JWT
+
+- **utils/** : Classes utilitaires
+  - `Constants.java` : Constantes utilisées dans l'application
+
+- **loader/** : Chargement des données initiales
+  - Contient les scripts pour initialiser la base de données avec les utilisateurs admin, les permissions, etc.
+
+- **scheduler/** : Tâches planifiées
+  - `GarantieReminderScheduler.java` : Scheduler pour les rappels de garanties (fonctionnalité obsolète à retravailler)
+
+- **mapper/** : Mappers entre entités et DTOs
+  - Dossier à supprimer car non utilisé dans la version actuelle
+
 #### Frontend → Backend
 - **Protocole** : HTTP/HTTPS avec API REST
 - **Authentification** : JWT Bearer Token
@@ -70,7 +120,6 @@ Le projet de développement de l'application de gestion des dossiers de recouvre
 - **HTTP Methods** : GET, POST, PUT, DELETE, OPTIONS
 - **Content-Type** : application/json, multipart/form-data (upload)
 - **Headers** : Authorization (Bearer token), Content-Type
-- **Status Codes** : 200, 201, 400, 401, 403, 404, 500
 
 ---
 
@@ -115,7 +164,7 @@ Le projet de développement de l'application de gestion des dossiers de recouvre
 
 ### Diagramme ERD - Code pour app.eraser.com
 
-![Diagramme ERD des entités](diagram-export-29-07-2025-19_57_22.png)
+![Diagramme ERD des entités](diagram-BD.png)
 
 ### Statuts et Énumérations
 
@@ -138,6 +187,23 @@ public enum EtatValidation {
 ---
 
 ## 🔐 Système de Sécurité
+
+### Configuration de la Sécurité
+
+La sécurité est gérée principalement par les fichiers dans le dossier `Config/` du backend :
+
+- **SecurityConfig.java** : Configuration principale de Spring Security
+  - Définit les règles d'accès aux endpoints REST
+  - Configure l'authentification stateless avec JWT
+  - Désactive CSRF et active CORS
+
+- **JwtConfig.java** : Configuration des tokens JWT
+  - Définit la clé secrète et l'algorithme de signature (HS256)
+  - Configure la durée de validité des tokens (10 heures)
+
+- **CorsConfig.java** : Configuration CORS
+  - Autorise les requêtes depuis l'origine du frontend (localhost:4200)
+  - Configure les méthodes HTTP autorisées et les headers
 
 ### Méthodes d'Authentification
 
@@ -273,17 +339,34 @@ public CorsConfigurationSource corsConfigurationSource() {
 
 ## 💻 Frontend Angular
 
-### Structure des Composants
+### Structure du Frontend
 
-```
-src/app/
-├── auth/                    # Authentification
-├── admin/                   # Administration
-├── pages/                   # Pages métier
-├── components/              # Composants réutilisables
-├── shared/                  # Services et utilitaires
-└── layouts/                 # Layouts
-```
+Le frontend est organisé de façon modulaire. Pour chaque fonctionnalité, on retrouve systématiquement :
+
+- **Component** : `src/app/pages/[fonctionnalité]/` - Interface utilisateur
+- **Model** : `src/app/shared/models/` - Structures de données
+- **Service** : `src/app/shared/services/` - Communication avec le backend
+- **Route** : Définie dans `src/app/app-routing.module.ts`
+
+#### Exemple : Gestion des dossiers de recouvrement
+
+- **Component** : `src/app/pages/dossiers/dossier-recouvrement-add/dossier-recouvrement-add.component.ts`
+- **Model** : `src/app/shared/models/dossier-recouvrement.model.ts`
+- **Service** : `src/app/shared/services/dossier-recouvrement.service.ts`
+- **Route** : Définie dans `src/app/app-routing.module.ts`
+
+
+![Flux de création d'un dossier](dossier-create.png)
+
+#### Modules principaux
+
+- **app/** : Module racine avec routing et configuration
+- **auth/** : Authentification (login, change-password)
+- **admin/** : Administration (users, roles, agences, history)
+- **pages/** : Pages métier (dashboard, dossiers, clients, comptes, etc.)
+- **shared/** : Services partagés, guards, interceptors
+- **components/** : Composants réutilisables (navbar, sidebar)
+- **layouts/** : Layouts (auth-layout, main-layout)
 
 ### Services Principaux
 
@@ -410,6 +493,25 @@ ng serve
 ---
 
 ## 📚 Annexes
+
+### Fichiers de Test et Documentation
+
+Le dossier `Documentation-Recouvrement` contient plusieurs fichiers utiles :
+
+#### Fichiers CSV pour les tests
+
+- `clients (1).csv` : Données clients pour tester l'import CSV
+- `comptes (1).csv` : Données comptes pour tester l'import CSV
+- `DossiersClients (1).csv` : Données dossiers-clients pour tester l'import CSV
+
+Ces fichiers peuvent être importés dans l'application pour tester les fonctionnalités d'import.
+
+#### Documents de référence
+
+- `Cahier des Charges - Application de Gestion des Dossiers de Recouvrement.docx (2).pdf` : Cahier des charges détaillé
+- `TDR application de gestion dossiers de recouvrement.pdf` : Termes de référence du projet
+- `diagramme-BD.png` : Diagramme de la base de données
+- `dossier-create.png` : Diagramme de flux pour la création d'un dossier
 
 ### Références Techniques
 - [Spring Boot Documentation](https://spring.io/projects/spring-boot)
