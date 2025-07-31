@@ -299,46 +299,144 @@ public CorsConfigurationSource corsConfigurationSource() {
 
 ## 🌐 API REST
 
-### Endpoints Principaux
+### Documentation complète des endpoints
 
 #### 1. Authentification (`/auth`)
-| Méthode | Endpoint | Description | Permissions |
-|---------|----------|-------------|-------------|
-| POST | `/auth/login` | Connexion utilisateur | Public |
-| POST | `/auth/register` | Inscription utilisateur | Public |
-| POST | `/auth/change-password` | Changement de mot de passe | Authentifié |
+| Méthode | Endpoint | Description | Paramètres | Permissions |
+|---------|----------|-------------|-----------|------------|
+| POST | `/auth/login` | Connexion utilisateur | `email`, `password` | Public |
+| POST | `/auth/register` | Inscription utilisateur | `email`, `name`, `password`, `roleId` | Public |
+| POST | `/auth/change-password` | Changement de mot de passe | `oldPassword`, `newPassword` | Authentifié |
 
 #### 2. Dossiers de Recouvrement (`/dossiers`)
-| Méthode | Endpoint | Description | Permissions |
-|---------|----------|-------------|-------------|
-| GET | `/dossiers/affichage` | Liste des dossiers | READ_DOSSIER |
-| GET | `/dossiers/{id}` | Détails d'un dossier | READ_DOSSIER |
-| POST | `/dossiers/create` | Création d'un dossier | CREATE_DOSSIER |
-| PUT | `/dossiers/update/{id}` | Modification d'un dossier | UPDATE_DOSSIER |
-| DELETE | `/dossiers/delete/{id}` | Suppression d'un dossier | DELETE_DOSSIER |
-| GET | `/dossiers/search` | Recherche de dossiers | READ_DOSSIER |
-| POST | `/dossiers/{id}/fusionner-complet` | Fusion PDF complète | READ_DOSSIER |
+| Méthode | Endpoint | Description | Paramètres | Permissions |
+|---------|----------|-------------|-----------|------------|
+| GET | `/dossiers/affichage` | Liste des dossiers | - | READ_DOSSIER |
+| GET | `/dossiers/{id}` | Détails d'un dossier | `id` | READ_DOSSIER |
+| POST | `/dossiers/create` | Création d'un dossier | Objet dossier | CREATE_DOSSIER |
+| PUT | `/dossiers/update/{id}` | Modification d'un dossier | `id`, Objet dossier | UPDATE_DOSSIER |
+| DELETE | `/dossiers/delete/{id}` | Suppression d'un dossier | `id` | DELETE_DOSSIER |
+| GET | `/dossiers/search` | Recherche de dossiers | `dossierId`, `numeroCompte`, `nomClient` | READ_DOSSIER |
+| POST | `/dossiers/{id}/fusionner-complet` | Fusion PDF complète | `id`, `detailsPdf`, `miseEnDemeurePdf` | READ_DOSSIER |
+| POST | `/dossiers/import` | Import de dossiers via CSV | `file` (CSV) | CREATE_DOSSIER |
+| POST | `/dossiers/{id}/archiver` | Archivage d'un dossier | `id` | UPDATE_DOSSIER |
+| POST | `/dossiers/{id}/desarchiver` | Désarchivage d'un dossier | `id` | UPDATE_DOSSIER |
+| POST | `/dossiers/{id}/reset-validation` | Réinitialisation validation | `id` | UPDATE_DOSSIER |
+| GET | `/dossiers/actifs` | Liste des dossiers actifs | - | READ_DOSSIER |
+| GET | `/dossiers/archives` | Liste des dossiers archivés | - | READ_DOSSIER |
+| GET | `/dossiers/count-archives` | Comptage des dossiers archivés | - | READ_DOSSIER |
+| GET | `/dossiers/{id}/is-archived` | Vérification si archivé | `id` | READ_DOSSIER |
+| GET | `/dossiers/{id}/check-files` | Vérification des fichiers | `id` | READ_DOSSIER |
 
 #### 3. Clients (`/clients`)
-| Méthode | Endpoint | Description | Permissions |
-|---------|----------|-------------|-------------|
-| GET | `/clients/Affichage` | Liste des clients | READ_CLIENT |
-| GET | `/clients/{nni}` | Détails d'un client | READ_CLIENT |
-| POST | `/clients/create` | Création d'un client | CREATE_CLIENT |
-| POST | `/clients/import-client` | Import CSV | IMPORT_CLIENT |
+| Méthode | Endpoint | Description | Paramètres | Permissions |
+|---------|----------|-------------|-----------|------------|
+| GET | `/clients/Affichage` | Liste des clients | - | READ_CLIENT |
+| GET | `/clients/{nni}` | Détails d'un client | `nni` | READ_CLIENT |
+| POST | `/clients/create` | Création d'un client | Objet client | CREATE_CLIENT |
+| POST | `/clients/import-client` | Import CSV | `file` (CSV) | IMPORT_CLIENT |
+| PUT | `/clients/update/{id}` | Modification d'un client | `id`, Objet client | UPDATE_CLIENT |
+| DELETE | `/clients/delete/{id}` | Suppression d'un client | `id` | DELETE_CLIENT |
 
-#### 4. Administration (`/admin`)
-| Méthode | Endpoint | Description | Permissions |
-|---------|----------|-------------|-------------|
-| GET | `/admin/roles` | Liste des rôles | READ_ROLE |
-| POST | `/admin/roles` | Création d'un rôle | CREATE_ROLE |
-| PUT | `/admin/roles/{id}` | Modification d'un rôle | UPDATE_ROLE |
-| DELETE | `/admin/roles/{id}` | Suppression d'un rôle | DELETE_ROLE |
+#### 4. Utilisateurs (`/users`)
+| Méthode | Endpoint | Description | Paramètres | Permissions |
+|---------|----------|-------------|-----------|------------|
+| GET | `/users` | Liste de tous les utilisateurs | - | READ_USER |
+| POST | `/users` | Création d'un utilisateur | Objet user | CREATE_USER |
+| GET | `/users/type/{userType}` | Utilisateurs par type | `userType` | READ_USER |
+| GET | `/users/types` | Utilisateurs par types multiples | `types` (séparés par virgule) | READ_USER |
+
+#### 5. Administration (`/admin`)
+| Méthode | Endpoint | Description | Paramètres | Permissions |
+|---------|----------|-------------|-----------|------------|
+| GET | `/admin/roles` | Liste des rôles | - | READ_ROLE |
+| POST | `/admin/roles` | Création d'un rôle | Objet role | CREATE_ROLE |
+| PUT | `/admin/roles/{id}` | Modification d'un rôle | `id`, Objet role | UPDATE_ROLE |
+| DELETE | `/admin/roles/{id}` | Suppression d'un rôle | `id` | DELETE_ROLE |
+| GET | `/admin/users` | Liste des utilisateurs | - | READ_USER |
+| POST | `/admin/users` | Création d'un utilisateur | Objet user | CREATE_USER |
+| PUT | `/admin/users/{id}` | Modification d'un utilisateur | `id`, Objet user | UPDATE_USER |
+| DELETE | `/admin/users/{id}` | Suppression d'un utilisateur | `id` | DELETE_USER |
+
+#### 6. Comptes (`/comptes`)
+| Méthode | Endpoint | Description | Paramètres | Permissions |
+|---------|----------|-------------|-----------|------------|
+| GET | `/comptes/affichage` | Liste des comptes | - | READ_COMPTE |
+| GET | `/comptes/{id}` | Détails d'un compte | `id` | READ_COMPTE |
+| POST | `/comptes/create` | Création d'un compte | Objet compte | CREATE_COMPTE |
+| PUT | `/comptes/update/{id}` | Modification d'un compte | `id`, Objet compte | UPDATE_COMPTE |
+| DELETE | `/comptes/delete/{id}` | Suppression d'un compte | `id` | DELETE_COMPTE |
+| POST | `/comptes/import` | Import CSV | `file` (CSV) | IMPORT_COMPTE |
+
+#### 7. Fichiers
+
+##### 7.1 Chèques (`/cheques`)
+| Méthode | Endpoint | Description | Paramètres | Permissions |
+|---------|----------|-------------|-----------|------------|
+| POST | `/cheques/upload/{dossierId}` | Upload fichier chèque | `dossierId`, `file` | UPLOAD_CHEQUE_FILE |
+| GET | `/cheques/download/{dossierId}` | Téléchargement fichier | `dossierId` | DOWNLOAD_CHEQUE_FILE |
+| DELETE | `/cheques/delete/{dossierId}` | Suppression fichier | `dossierId` | DELETE_CHEQUE_FILE |
+
+##### 7.2 Cautions (`/cautions`)
+| Méthode | Endpoint | Description | Paramètres | Permissions |
+|---------|----------|-------------|-----------|------------|
+| POST | `/cautions/upload/{dossierId}` | Upload fichier caution | `dossierId`, `file` | UPLOAD_CAUTION_FILE |
+| GET | `/cautions/download/{dossierId}` | Téléchargement fichier | `dossierId` | DOWNLOAD_CAUTION_FILE |
+| DELETE | `/cautions/delete/{dossierId}` | Suppression fichier | `dossierId` | DELETE_CAUTION_FILE |
+
+##### 7.3 Crédits (`/credits`)
+| Méthode | Endpoint | Description | Paramètres | Permissions |
+|---------|----------|-------------|-----------|------------|
+| POST | `/credits/upload/{dossierId}` | Upload fichier crédit | `dossierId`, `file` | UPLOAD_CREDIT_FILE |
+| GET | `/credits/download/{dossierId}` | Téléchargement fichier | `dossierId` | DOWNLOAD_CREDIT_FILE |
+| DELETE | `/credits/delete/{dossierId}` | Suppression fichier | `dossierId` | DELETE_CREDIT_FILE |
+
+##### 7.4 Lettres de crédit (`/lc-files`)
+| Méthode | Endpoint | Description | Paramètres | Permissions |
+|---------|----------|-------------|-----------|------------|
+| POST | `/lc-files/upload/{dossierId}` | Upload fichier LC | `dossierId`, `file` | UPLOAD_LC_FILE |
+| GET | `/lc-files/download/{dossierId}` | Téléchargement fichier | `dossierId` | DOWNLOAD_LC_FILE |
+| DELETE | `/lc-files/delete/{dossierId}` | Suppression fichier | `dossierId` | DELETE_LC_FILE |
+
+#### 8. Commentaires (`/comments`)
+| Méthode | Endpoint | Description | Paramètres | Permissions |
+|---------|----------|-------------|-----------|------------|
+| GET | `/comments/dossier/{dossierId}` | Commentaires d'un dossier | `dossierId` | READ_DOSSIER |
+| POST | `/comments/add` | Ajout d'un commentaire | Objet comment | Authentifié |
+| DELETE | `/comments/{id}` | Suppression commentaire | `id` | Auteur ou ADMIN |
+
+#### 9. Notifications (`/notifications`)
+| Méthode | Endpoint | Description | Paramètres | Permissions |
+|---------|----------|-------------|-----------|------------|
+| GET | `/notifications/user` | Notifications utilisateur | - | Authentifié |
+| POST | `/notifications/mark-read/{id}` | Marquer comme lue | `id` | Authentifié |
+| POST | `/notifications/mark-all-read` | Tout marquer comme lu | - | Authentifié |
+
+#### 10. Rejets (`/rejets`)
+| Méthode | Endpoint | Description | Paramètres | Permissions |
+|---------|----------|-------------|-----------|------------|
+| POST | `/rejets/create` | Création d'un rejet | Objet rejet | UPDATE_DOSSIER |
+| GET | `/rejets/dossier/{dossierId}` | Rejets d'un dossier | `dossierId` | READ_DOSSIER |
+
+#### 11. Dashboard (`/dashboard`)
+| Méthode | Endpoint | Description | Paramètres | Permissions |
+|---------|----------|-------------|-----------|------------|
+| GET | `/dashboard/stats` | Statistiques globales | - | Authentifié |
+| GET | `/dashboard/dossiers-by-status` | Dossiers par statut | - | Authentifié |
+| GET | `/dashboard/recent-activity` | Activité récente | - | Authentifié |
+
+#### 12. Historique (`/history`)
+| Méthode | Endpoint | Description | Paramètres | Permissions |
+|---------|----------|-------------|-----------|------------|
+| GET | `/history/dossier/{dossierId}` | Historique d'un dossier | `dossierId` | READ_DOSSIER |
+| GET | `/history/user/{userId}` | Historique d'un utilisateur | `userId` | READ_USER |
+| GET | `/history/recent` | Actions récentes | - | ROLE_ADMIN |
 
 ---
 
 ## 💻 Frontend Angular
 
+{{ ... }}
 ### Structure du Frontend
 
 Le frontend est organisé de façon modulaire. Pour chaque fonctionnalité, on retrouve systématiquement :
