@@ -164,7 +164,7 @@ Le backend est organisé selon une structure claire et cohérente. Pour chaque f
 
 ### Diagramme ERD - Code pour app.eraser.com
 
-![Diagramme ERD des entités](diagram-BD.png)
+![Diagramme ERD des entités](diagramme-BD.png)
 
 ### Statuts et Énumérations
 
